@@ -1,4 +1,4 @@
-package com.template2024.ui.screens
+package com.template2024.ui.screens.home
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -47,13 +48,12 @@ import com.template2024.ui.theme.Template2024ApplicationTheme
 @Composable
 fun HomeScreen(
     homeUiState: HomeViewModel.HomeUiState,
-    onBackPressed: () -> Unit
+    onCategorySelected: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                appbarTitle = stringResource(id = R.string.home),
-                onBackPressed = { onBackPressed() }
+                appbarTitle = stringResource(id = R.string.home)
             )
         },
         content = { padding ->
@@ -96,6 +96,8 @@ fun HomeScreen(
                                         shape = RoundedCornerShape(8.dp),
                                         modifier = Modifier
                                             .fillMaxWidth()
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .clickable { onCategorySelected(category.name) }
                                     ) {
                                         Row(modifier = Modifier.animateContentSize()) {
                                             Image(
@@ -168,7 +170,7 @@ fun DefaultPreview() {
                 category, category, category
             )
         ),
-            onBackPressed = {}
+            onCategorySelected = {}
         )
     }
 }

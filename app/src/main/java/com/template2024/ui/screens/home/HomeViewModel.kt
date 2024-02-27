@@ -1,4 +1,4 @@
-package com.template2024.ui.screens
+package com.template2024.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

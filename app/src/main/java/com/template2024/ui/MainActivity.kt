@@ -14,8 +14,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.template2024.ui.navigation.Graph
 import com.template2024.ui.navigation.MainRoute
-import com.template2024.ui.screens.HomeScreen
-import com.template2024.ui.screens.HomeViewModel
+import com.template2024.ui.navigation.ParameterNames.CATEGORY_NAME
+import com.template2024.ui.screens.home.HomeScreen
+import com.template2024.ui.screens.home.HomeViewModel
+import com.template2024.ui.screens.meals.MealsListScreen
+import com.template2024.ui.screens.meals.MealsViewModel
 import com.template2024.ui.theme.Template2024ApplicationTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -42,7 +45,26 @@ class MainActivity : ComponentActivity() {
 
                             HomeScreen(
                                 homeUiState = homeUiState,
-                                onBackPressed = {}
+                                onCategorySelected = { category ->
+                                    mainNavController.navigate(
+                                        MainRoute.MealsList.name
+                                            .replace("{$CATEGORY_NAME}", category)
+                                    )
+                                }
+                            )
+                        }
+                        composable(route = MainRoute.MealsList.name) {
+                            val category =
+                                it.arguments?.getString(CATEGORY_NAME, "")
+                                    ?: ""
+
+                            val mealsViewModel = koinViewModel<MealsViewModel>()
+                            val mealsListUiState by mealsViewModel.mealsListUiState.collectAsStateWithLifecycle()
+
+                            MealsListScreen(
+                                appBarTitle = category,
+                                mealsListUiState = mealsListUiState,
+                                onBackPressed = { mainNavController.popBackStack() }
                             )
                         }
                     }

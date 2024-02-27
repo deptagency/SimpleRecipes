@@ -1,16 +1,16 @@
 package com.template2024.ui.navigation
 
-import com.template2024.ui.navigation.ParameterNames.RECIPE_ID
+import com.template2024.ui.navigation.ParameterNames.CATEGORY_NAME
 
 object Graph {
     const val MAIN = "main_graph"
 }
 
 object ParameterNames {
-    const val RECIPE_ID = "appBarTitle"
+    const val CATEGORY_NAME = "categoryName"
 }
 
 sealed class MainRoute(val name: String) {
     data object Home: MainRoute("Home")
-    data object RecipeDetail: MainRoute("RecipeDetail/{$RECIPE_ID}")
+    data object MealsList: MainRoute("MealsList/{$CATEGORY_NAME}")
 }
