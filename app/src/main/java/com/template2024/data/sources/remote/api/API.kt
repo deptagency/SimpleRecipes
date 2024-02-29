@@ -2,6 +2,7 @@ package com.template2024.data.sources.remote.api
 
 import com.template2024.data.sources.remote.dto.response.CategoriesResponse
 import com.template2024.data.sources.remote.dto.response.CategoryMealsResponse
+import com.template2024.data.sources.remote.dto.response.MealDetailsResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,4 +14,9 @@ interface API {
     suspend fun getCategoryMealsList(
         @Query("c") categoryName: String
     ): CategoryMealsResponse
+
+    @GET("1/lookup.php")
+    suspend fun getMealDetails(
+        @Query("i") mealId: String
+    ): MealDetailsResponse
 }

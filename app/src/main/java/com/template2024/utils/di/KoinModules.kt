@@ -12,8 +12,10 @@ import com.template2024.data.sources.remote.api.API
 import com.template2024.data.sources.remote.interceptor.NetworkInterceptor
 import com.template2024.domain.repositories.RecipesRepository
 import com.template2024.domain.usecases.GetCategoriesUseCase
+import com.template2024.domain.usecases.GetMealDetailsUseCase
 import com.template2024.domain.usecases.GetMealsByCategoryUseCase
 import com.template2024.ui.screens.home.HomeViewModel
+import com.template2024.ui.screens.mealdetails.MealDetailsViewModel
 import com.template2024.ui.screens.meals.MealsViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -26,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { MealsViewModel(get(), get()) }
+    viewModel { MealDetailsViewModel(get(), get()) }
 }
 
 val repositoryModule = module {
@@ -35,6 +38,7 @@ val repositoryModule = module {
 val useCaseModule = module {
     single { GetCategoriesUseCase(get()) }
     single { GetMealsByCategoryUseCase(get()) }
+    single { GetMealDetailsUseCase(get()) }
 }
 
 val apiModule = module {

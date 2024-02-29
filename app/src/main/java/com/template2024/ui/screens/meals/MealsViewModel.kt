@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.template2024.domain.models.Meal
 import com.template2024.domain.usecases.GetMealsByCategoryUseCase
 import com.template2024.ui.navigation.ParameterNames
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -37,8 +38,8 @@ class MealsViewModel(
     }
 
     private suspend fun getMeals() {
+        delay(300)
         _mealsListUiState.emit(MealsListUiState.Loading)
-//        delay(1000) // Fake network delay
 
         val meals = getMealsByCategoryUseCase(category).getOrNull()
 

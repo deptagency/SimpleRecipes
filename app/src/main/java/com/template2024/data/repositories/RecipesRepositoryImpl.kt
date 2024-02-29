@@ -4,7 +4,9 @@ import com.template2024.data.sources.local.Database
 import com.template2024.data.sources.remote.api.API
 import com.template2024.data.sources.remote.dto.response.CategoryResponse
 import com.template2024.data.sources.remote.dto.response.toMeal
+import com.template2024.data.sources.remote.dto.response.toMealInfo
 import com.template2024.domain.models.Meal
+import com.template2024.domain.models.MealInfo
 import com.template2024.domain.repositories.RecipesRepository
 
 class RecipesRepositoryImpl(
@@ -29,6 +31,18 @@ class RecipesRepositoryImpl(
                 categoryMealsResponse.mealsList.map {
                     it.toMeal()
                 }
+            )
+        } catch (ex: Exception) {
+            Result.failure(ex)
+        }
+    }
+
+    override suspend fun getMealDetails(mealId: String): Result<MealInfo> {
+        return try {
+            val mealDetailsResponse = api.getMealDetails(mealId)
+
+            Result.success(
+                mealDetailsResponse.meals[0].toMealInfo()
             )
         } catch (ex: Exception) {
             Result.failure(ex)

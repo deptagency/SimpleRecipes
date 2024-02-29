@@ -88,6 +88,7 @@ fun HomeScreen(
 
                         if (categories.isNotEmpty()) {
                             LazyColumn(
+                                modifier = Modifier.padding(vertical = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 items(categories) { category ->
@@ -157,7 +158,7 @@ fun HomeScreen(
 
 @Preview(apiLevel = 31, showSystemUi = true)
 @Composable
-fun DefaultPreview() {
+fun HomeScreenPreview() {
     val category = CategoryResponse(
         id = "0",
         name = "Beef",

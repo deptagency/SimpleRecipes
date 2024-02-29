@@ -1,8 +1,8 @@
 package com.template2024.ui.screens.meals
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -27,10 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import com.template2024.R
 import com.template2024.domain.models.Meal
 import com.template2024.ui.components.TopAppBar
 import com.template2024.ui.theme.Template2024ApplicationTheme
@@ -40,6 +44,7 @@ import com.template2024.ui.theme.Template2024ApplicationTheme
 fun MealsListScreen(
     appBarTitle: String,
     mealsListUiState: MealsViewModel.MealsListUiState,
+    onMealClicked: (String) -> Unit,
     onBackPressed: () -> Unit
 ) {
     Scaffold(
@@ -54,7 +59,7 @@ fun MealsListScreen(
                     .fillMaxSize()
                     .background(Color.White)
                     .padding(padding)
-                    .padding(horizontal = 8.dp),
+                    .padding(8.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -90,7 +95,10 @@ fun MealsListScreen(
                                     state = pagerState,
                                     modifier = Modifier.weight(1f)
                                 ) { page ->
-                                    CarouselItem(meals[page])
+                                    CarouselItem(
+                                        meals[page],
+                                        onItemClicked = onMealClicked
+                                    )
                                 }
 
                                 Row(
@@ -120,21 +128,27 @@ fun MealsListScreen(
 }
 
 @Composable
-fun CarouselItem(meal: Meal) {
+fun CarouselItem(meal: Meal, onItemClicked: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(model = meal.mealThumbNail),
-            contentDescription = null,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(meal.mealThumbNail)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(R.string.recipe_image_content_description),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 8.dp)
                 .weight(0.9f)
                 .clip(RoundedCornerShape(16.dp))
+                .clickable { onItemClicked(meal.mealId) }
         )
         Column(
             modifier = Modifier
@@ -156,7 +170,7 @@ fun CarouselItem(meal: Meal) {
 
 @Preview(apiLevel = 31, showSystemUi = true)
 @Composable
-fun DefaultPreview() {
+fun MealsScreenPreview() {
     val meal = Meal(
         mealName = "Beef Broth",
         mealThumbNail = "https://example.com/image.jpg",
@@ -165,32 +179,14 @@ fun DefaultPreview() {
 
     Template2024ApplicationTheme {
         MealsListScreen(
-            appBarTitle = "Home",
+            appBarTitle = "Beef",
             mealsListUiState = MealsViewModel.MealsListUiState.Idle(
                 listOf(
                     meal, meal, meal
                 )
             ),
+            onMealClicked = {},
             onBackPressed = {}
         )
-    }
-}
-
-@Preview(apiLevel = 31)
-@Composable
-fun CarouselItemPreview() {
-    Template2024ApplicationTheme {
-        val meal = Meal(
-            mealName = "Beef Broth",
-            mealThumbNail = "https://example.com/image.jpg",
-            mealId = "123"
-        )
-        Column(
-            Modifier
-                .wrapContentSize()
-                .background(Color.White)
-        ) {
-            CarouselItem(meal = meal)
-        }
     }
 }

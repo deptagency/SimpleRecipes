@@ -28,11 +28,11 @@ class HomeViewModel (
     private fun getCategories() {
         viewModelScope.launch {
             _homeUiState.emit(HomeUiState.Loading)
-            delay(1000) // Fake network delay
 
             val categories = getCategoriesUseCase().getOrNull()
 
             if (categories?.isNotEmpty() == true) {
+                delay(250)
                 _homeUiState.emit(HomeUiState.Idle(categories))
             } else {
                 _homeUiState.emit(HomeUiState.Error("Unable to fetch categories."))

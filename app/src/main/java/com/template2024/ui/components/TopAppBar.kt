@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.template2024.R
@@ -23,12 +24,13 @@ fun TopAppBar(
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = Color.Unspecified,
         ),
         title = {
             Text(
-                appbarTitle,
+                text = appbarTitle,
+                color = Color.White,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.titleLarge
@@ -40,7 +42,7 @@ fun TopAppBar(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_left),
                         contentDescription = stringResource(R.string.back),
-                        tint = MaterialTheme.colorScheme.secondary
+                        tint = Color.White
                     )
                 }
             }
