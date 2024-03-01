@@ -100,8 +100,9 @@ class MainActivity : ComponentActivity() {
 
                             MealDetailsScreen(
                                 mealDetailsUiState = mealsDetailsUiState,
-                                onBackPressed = { mainNavController.popBackStack() })
-                            
+                                onBackPressed = { mainNavController.popBackStack() },
+                                imageButtonOneClicked = { mealDetailsViewModel.saveOrDeleteMealDetails() }
+                            )
                         }
                     }
                 }

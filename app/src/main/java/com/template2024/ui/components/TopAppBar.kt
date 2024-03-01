@@ -21,11 +21,16 @@ import com.template2024.R
 fun TopAppBar(
     appbarTitle: String = stringResource(id = R.string.app_name),
     onBackPressed: (() -> Unit)? = null,
+    imageButtonOneRes: Int = 0,
+    imageButtonOneContentDescription: String = "",
+    imageButtonOneClicked: () -> Unit = {},
+    imageButtonOneColor: Color = Color.Unspecified
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = Color.Unspecified,
+            actionIconContentColor = imageButtonOneColor
         ),
         title = {
             Text(
@@ -46,6 +51,16 @@ fun TopAppBar(
                     )
                 }
             }
+        },
+        actions = {
+            if (imageButtonOneRes != 0) {
+                IconButton(onClick = { imageButtonOneClicked.invoke() }) {
+                    Icon(
+                        painter = painterResource(id = imageButtonOneRes),
+                        contentDescription = imageButtonOneContentDescription,
+                    )
+                }
+            }
         }
     )
 }
@@ -55,5 +70,18 @@ fun TopAppBar(
 fun TopAppBarPreview() {
     TopAppBar(
         appbarTitle = "Home"
-    ) {}
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+fun TopAppBarDetailPreview() {
+    TopAppBar(
+        appbarTitle = "Beef Asado",
+        onBackPressed = {},
+        imageButtonOneRes = R.drawable.ic_favorite,
+        imageButtonOneContentDescription = "Favorite",
+        imageButtonOneClicked = {},
+        imageButtonOneColor = Color.Red
+    )
 }

@@ -6,4 +6,5 @@
     <string name="ingredients_header">Ingredients</string>
     <string name="instructions_header">Instructions</string>
     <string name="cuisine_header">Cuisine</string>
+    <string name="favorite_content_description">Favorite</string>
 </resources>

@@ -39,16 +39,23 @@ import com.template2024.ui.theme.Template2024ApplicationTheme
 @Composable
 fun MealDetailsScreen(
     mealDetailsUiState: MealDetailsViewModel.MealDetailsUiState,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    imageButtonOneClicked: () -> Unit
 ) {
     val context = LocalContext.current
     var appBarTitle by remember { mutableStateOf(context.getString(R.string.app_name)) }
+    var appBarFavoriteColor by remember { mutableStateOf(Color.White) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                appbarTitle = appBarTitle
-            ) { onBackPressed() }
+                appbarTitle = appBarTitle,
+                onBackPressed = { onBackPressed() },
+                imageButtonOneRes = R.drawable.ic_favorite,
+                imageButtonOneContentDescription = stringResource(R.string.favorite_content_description),
+                imageButtonOneClicked = { imageButtonOneClicked() },
+                imageButtonOneColor = appBarFavoriteColor
+            )
         },
         content = { padding ->
             Column(
@@ -81,6 +88,7 @@ fun MealDetailsScreen(
 
                         if (mealInfo != null) {
                             appBarTitle = mealInfo.mealName
+                            appBarFavoriteColor = if (mealInfo.savedToDB) Color.Red else Color.White
 
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
@@ -142,13 +150,15 @@ fun MealDetailsScreenPreview() {
         mealIngredientList = listOf(
             Pair("1 Heart", "Love"),
             Pair("2 Cans", "Coke")
-        )
+        ),
+        savedToDB = false
     )
 
     Template2024ApplicationTheme {
         MealDetailsScreen(
             mealDetailsUiState = MealDetailsViewModel.MealDetailsUiState.Idle(mealInfo),
-            onBackPressed = {}
+            onBackPressed = {},
+            imageButtonOneClicked = {}
         )
     }
 }

@@ -169,7 +169,8 @@ fun MealInfoResponse.toMealInfo(): MealInfo {
         Pair(strIngredient20, strMeasure20?.trim())
     )
 
-    val filteredIngredientsList = ingredientsList.filter { !it.second.isNullOrBlank() }
+    val filteredIngredientsList = ingredientsList
+        .filter { !it.first.isNullOrBlank() && !it.second.isNullOrBlank() } as List<Pair<String, String>>
 
     return MealInfo(
         mealId = mealId,
@@ -177,6 +178,7 @@ fun MealInfoResponse.toMealInfo(): MealInfo {
         region = region,
         mealThumbNail = mealThumbNail,
         mealInstructions = mealInstructions,
-        mealIngredientList = filteredIngredientsList
+        mealIngredientList = filteredIngredientsList,
+        savedToDB = false
     )
 }

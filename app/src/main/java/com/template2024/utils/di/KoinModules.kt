@@ -11,9 +11,11 @@ import com.template2024.data.sources.local.Database
 import com.template2024.data.sources.remote.api.API
 import com.template2024.data.sources.remote.interceptor.NetworkInterceptor
 import com.template2024.domain.repositories.RecipesRepository
+import com.template2024.domain.usecases.DeleteMealDetailsUseCase
 import com.template2024.domain.usecases.GetCategoriesUseCase
 import com.template2024.domain.usecases.GetMealDetailsUseCase
 import com.template2024.domain.usecases.GetMealsByCategoryUseCase
+import com.template2024.domain.usecases.SaveMealDetailsUseCase
 import com.template2024.ui.screens.home.HomeViewModel
 import com.template2024.ui.screens.mealdetails.MealDetailsViewModel
 import com.template2024.ui.screens.meals.MealsViewModel
@@ -28,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { MealsViewModel(get(), get()) }
-    viewModel { MealDetailsViewModel(get(), get()) }
+    viewModel { MealDetailsViewModel(get(), get(), get(), get()) }
 }
 
 val repositoryModule = module {
@@ -39,6 +41,8 @@ val useCaseModule = module {
     single { GetCategoriesUseCase(get()) }
     single { GetMealsByCategoryUseCase(get()) }
     single { GetMealDetailsUseCase(get()) }
+    single { SaveMealDetailsUseCase(get()) }
+    single { DeleteMealDetailsUseCase(get()) }
 }
 
 val apiModule = module {
@@ -58,11 +62,14 @@ val retrofitModule = module {
         return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
-    fun provideAuthInterceptor() : NetworkInterceptor {
+    fun provideAuthInterceptor(): NetworkInterceptor {
         return NetworkInterceptor()
     }
 
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor, networkInterceptor: NetworkInterceptor): OkHttpClient {
+    fun provideOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        networkInterceptor: NetworkInterceptor
+    ): OkHttpClient {
         return OkHttpClient()
             .newBuilder()
             .addInterceptor(loggingInterceptor)
@@ -87,12 +94,14 @@ val retrofitModule = module {
 }
 
 val databaseModule = module {
-    fun provideDatabase(context: Context) : Database {
+    fun provideDatabase(context: Context): Database {
         return Room.databaseBuilder(
             context,
             Database::class.java, "appDatabase"
-        /* Add migrations when updating database structure */
-        ).build()
+            /* Add migrations when updating database structure */
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     single {

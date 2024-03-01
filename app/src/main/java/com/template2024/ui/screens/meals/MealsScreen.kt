@@ -50,8 +50,9 @@ fun MealsListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                appbarTitle = appBarTitle
-            ) { onBackPressed() }
+                appbarTitle = appBarTitle,
+                onBackPressed =  { onBackPressed() }
+            )
         },
         content = { padding ->
             Column(

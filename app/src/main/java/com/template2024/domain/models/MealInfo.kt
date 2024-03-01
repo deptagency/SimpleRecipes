@@ -6,5 +6,6 @@ data class MealInfo(
     val region: String,
     val mealThumbNail: String,
     val mealInstructions: String,
-    val mealIngredientList: List<Pair<String?, String?>>,
+    val mealIngredientList: List<Pair<String, String>>,
+    val savedToDB: Boolean
 )
