@@ -22,6 +22,7 @@ object ParameterNames {
 
 sealed class MainRoute(val name: String) {
     data object Home: MainRoute("Home")
+    data object SavedMeals: MainRoute("SavedMeals")
     data object MealsList: MainRoute("MealsList/{$CATEGORY_NAME}")
     data object MealDetails: MainRoute("MealsDetails/{$MEAL_ID}")
 }
@@ -31,24 +32,24 @@ object NavAnimation {
         initialOffsetY = {
             it * 2
         },
-        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
     )
 
     val slideOutLikeBottomSheet = slideOutVertically(
         targetOffsetY = {
             it * 2
         },
-        animationSpec = tween(durationMillis = 500, easing = FastOutLinearInEasing)
+        animationSpec = tween(durationMillis = 300, easing = FastOutLinearInEasing)
     )
 
-    fun slideInFromRight(duration: Int = 500) = slideInHorizontally(
+    fun slideInFromRight(duration: Int = 300) = slideInHorizontally(
         initialOffsetX = {
             it * 2
         },
         animationSpec = tween(durationMillis = duration, easing = FastOutSlowInEasing)
     )
 
-    fun slideOutToRight(duration: Int = 500) = slideOutHorizontally(
+    fun slideOutToRight(duration: Int = 300) = slideOutHorizontally(
         targetOffsetX = {
             it * 2
         },

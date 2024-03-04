@@ -15,10 +15,12 @@ import com.template2024.domain.usecases.DeleteMealDetailsUseCase
 import com.template2024.domain.usecases.GetCategoriesUseCase
 import com.template2024.domain.usecases.GetMealDetailsUseCase
 import com.template2024.domain.usecases.GetMealsByCategoryUseCase
+import com.template2024.domain.usecases.GetSavedMealsUseCase
 import com.template2024.domain.usecases.SaveMealDetailsUseCase
 import com.template2024.ui.screens.home.HomeViewModel
 import com.template2024.ui.screens.mealdetails.MealDetailsViewModel
 import com.template2024.ui.screens.meals.MealsViewModel
+import com.template2024.ui.screens.savedmealslist.SavedMealsListViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -31,6 +33,7 @@ val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { MealsViewModel(get(), get()) }
     viewModel { MealDetailsViewModel(get(), get(), get(), get()) }
+    viewModel { SavedMealsListViewModel(get()) }
 }
 
 val repositoryModule = module {
@@ -40,6 +43,7 @@ val repositoryModule = module {
 val useCaseModule = module {
     single { GetCategoriesUseCase(get()) }
     single { GetMealsByCategoryUseCase(get()) }
+    single { GetSavedMealsUseCase(get()) }
     single { GetMealDetailsUseCase(get()) }
     single { SaveMealDetailsUseCase(get()) }
     single { DeleteMealDetailsUseCase(get()) }

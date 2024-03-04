@@ -27,6 +27,8 @@ import com.template2024.ui.screens.mealdetails.MealDetailsScreen
 import com.template2024.ui.screens.mealdetails.MealDetailsViewModel
 import com.template2024.ui.screens.meals.MealsListScreen
 import com.template2024.ui.screens.meals.MealsViewModel
+import com.template2024.ui.screens.savedmealslist.SavedMealsListScreen
+import com.template2024.ui.screens.savedmealslist.SavedMealsListViewModel
 import com.template2024.ui.theme.Template2024ApplicationTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -61,6 +63,11 @@ class MainActivity : ComponentActivity() {
                                     mainNavController.navigate(
                                         MainRoute.MealsList.name
                                             .replace("{$CATEGORY_NAME}", category)
+                                    )
+                                },
+                                imageButtonOneClicked = {
+                                    mainNavController.navigate(
+                                        MainRoute.SavedMeals.name
                                     )
                                 }
                             )
@@ -102,6 +109,26 @@ class MainActivity : ComponentActivity() {
                                 mealDetailsUiState = mealsDetailsUiState,
                                 onBackPressed = { mainNavController.popBackStack() },
                                 imageButtonOneClicked = { mealDetailsViewModel.saveOrDeleteMealDetails() }
+                            )
+                        }
+                        composable(
+                            route = MainRoute.SavedMeals.name,
+                            enterTransition = { slideInLikeBottomSheet },
+                            popEnterTransition = { fadeIn },
+                            popExitTransition = { slideOutLikeBottomSheet }
+                        ) {
+                            val savedMealsListViewModel = koinViewModel<SavedMealsListViewModel>()
+                            val savedMealsListUiState by savedMealsListViewModel.savedMealsListUiState.collectAsStateWithLifecycle()
+
+                            SavedMealsListScreen(
+                                savedMealsListUiState = savedMealsListUiState,
+                                onMealClicked = { mealId ->
+                                    mainNavController.navigate(
+                                        MainRoute.MealDetails.name
+                                            .replace("{$MEAL_ID}", mealId)
+                                    )
+                                },
+                                onBackPressed = { mainNavController.popBackStack() }
                             )
                         }
                     }

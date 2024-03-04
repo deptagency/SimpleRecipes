@@ -1,4 +1,4 @@
-package com.template2024.ui.screens.home
+package com.template2024.ui.screens.savedmealslist
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -15,21 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,24 +33,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.template2024.R
-import com.template2024.data.sources.remote.dto.response.CategoryResponse
+import com.template2024.domain.models.MealInfo
 import com.template2024.ui.components.TopAppBar
 import com.template2024.ui.theme.Template2024ApplicationTheme
 
 @Composable
-fun HomeScreen(
-    homeUiState: HomeViewModel.HomeUiState,
-    onCategorySelected: (String) -> Unit,
-    imageButtonOneClicked: () -> Unit
+fun SavedMealsListScreen(
+    savedMealsListUiState: SavedMealsListViewModel.SavedMealsListUiState,
+    onMealClicked: (String) -> Unit,
+    onBackPressed: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 appbarTitle = stringResource(id = R.string.home),
-                imageButtonOneRes = R.drawable.ic_saved,
-                imageButtonOneContentDescription = stringResource(R.string.favorite_content_description),
-                imageButtonOneClicked = { imageButtonOneClicked() },
-                imageButtonOneColor = Color.White
+                onBackPressed = { onBackPressed() }
             )
         },
         content = { padding ->
@@ -71,15 +60,23 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                when (homeUiState) {
-                    is HomeViewModel.HomeUiState.Error -> {
-                        Text(
-                            text = homeUiState.errorMessage,
-                            color = Color.Red
-                        )
+                when (savedMealsListUiState) {
+                    is SavedMealsListViewModel.SavedMealsListUiState.Error -> {
+                        Column(
+                            Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = savedMealsListUiState.errorMessage,
+                                color = Color.Red,
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+
                     }
 
-                    is HomeViewModel.HomeUiState.Loading -> {
+                    is SavedMealsListViewModel.SavedMealsListUiState.Loading -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -88,26 +85,25 @@ fun HomeScreen(
                         }
                     }
 
-                    is HomeViewModel.HomeUiState.Idle -> {
-                        val categories = homeUiState.categories
+                    is SavedMealsListViewModel.SavedMealsListUiState.Idle -> {
+                        val meals = savedMealsListUiState.meals
 
-                        if (categories.isNotEmpty()) {
+                        if (meals.isNotEmpty()) {
                             LazyColumn(
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                items(categories) { category ->
-                                    var isExpanded by remember { mutableStateOf(false) }
+                                items(meals) { meal ->
                                     ElevatedCard(
                                         shape = RoundedCornerShape(8.dp),
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .clip(RoundedCornerShape(8.dp))
-                                            .clickable { onCategorySelected(category.name) }
+                                            .clickable { onMealClicked(meal.mealId) }
                                     ) {
                                         Row(modifier = Modifier.animateContentSize()) {
                                             Image(
-                                                painter = rememberAsyncImagePainter(model = category.imageUrl),
+                                                painter = rememberAsyncImagePainter(model = meal.mealThumbNail),
                                                 contentDescription = null,
                                                 modifier = Modifier
                                                     .size(80.dp)
@@ -121,34 +117,18 @@ fun HomeScreen(
                                                     .padding(16.dp)
                                             ) {
                                                 Text(
-                                                    text = category.name,
+                                                    text = meal.mealName,
                                                     style = MaterialTheme.typography.titleMedium
                                                 )
                                                 Text(
-                                                    text = category.description,
+                                                    text = meal.mealInstructions,
                                                     textAlign = TextAlign.Start,
                                                     color = LocalContentColor.current.copy(alpha = 0.75f),
                                                     style = MaterialTheme.typography.labelSmall,
                                                     overflow = TextOverflow.Ellipsis,
-                                                    maxLines = if (isExpanded) 10 else 4
+                                                    maxLines = 4
                                                 )
                                             }
-                                            Icon(
-                                                if (isExpanded)
-                                                    Icons.Filled.KeyboardArrowUp
-                                                else
-                                                    Icons.Filled.KeyboardArrowDown,
-                                                contentDescription = null,
-                                                modifier = Modifier
-                                                    .padding(16.dp)
-                                                    .align(
-                                                        if (isExpanded)
-                                                            Alignment.Bottom
-                                                        else
-                                                            Alignment.CenterVertically
-                                                    )
-                                                    .clickable { isExpanded = !isExpanded }
-                                            )
                                         }
                                     }
                                 }
@@ -163,21 +143,27 @@ fun HomeScreen(
 
 @Preview(apiLevel = 31, showSystemUi = true)
 @Composable
-fun HomeScreenPreview() {
-    val category = CategoryResponse(
-        id = "0",
-        name = "Beef",
-        description = "Healthy Beef Recipes",
-        imageUrl = "https://example.com/image.jpg"
+fun SavedMealsListScreenPreview() {
+    val meal = MealInfo(
+        mealId = "123",
+        mealName = "Beef Broth",
+        region = "Japanese",
+        mealThumbNail = "https://example.com/image.jpg",
+        mealInstructions = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        mealIngredientList = emptyList(),
+        savedToDB = true
     )
+
     Template2024ApplicationTheme {
-        HomeScreen(homeUiState = HomeViewModel.HomeUiState.Idle(
-            listOf(
-                category, category, category
-            )
-        ),
-            onCategorySelected = {},
-            imageButtonOneClicked = {}
+        SavedMealsListScreen(
+            savedMealsListUiState = SavedMealsListViewModel.SavedMealsListUiState.Idle(
+                listOf(
+                    meal, meal, meal
+                )
+            ),
+//            savedMealsListUiState = SavedMealsListViewModel.SavedMealsListUiState.Error("No saved meals."),
+            onMealClicked = {},
+            onBackPressed = {}
         )
     }
 }

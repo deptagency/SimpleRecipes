@@ -10,6 +10,8 @@ import com.template2024.data.sources.remote.dto.response.toMealInfo
 import com.template2024.domain.models.Meal
 import com.template2024.domain.models.MealInfo
 import com.template2024.domain.repositories.RecipesRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RecipesRepositoryImpl(
     private val api: API,
@@ -67,6 +69,13 @@ class RecipesRepositoryImpl(
             } else {
                 Result.failure(ex)
             }
+        }
+    }
+
+    override suspend fun getAllSavedMeals(): Flow<List<MealInfo>> {
+        // Look for meals in database
+        return database.mealInfoDAO().getAllSavedMeals().map {
+            it.map { mealInfoEntity -> mealInfoEntity.toMealInfo() }
         }
     }
 
