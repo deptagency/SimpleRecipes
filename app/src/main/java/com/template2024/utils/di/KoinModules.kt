@@ -6,6 +6,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.template2024.BuildConfig
+import com.template2024.data.repositories.DataStoreRepository
 import com.template2024.data.repositories.RecipesRepositoryImpl
 import com.template2024.data.sources.local.Database
 import com.template2024.data.sources.remote.api.API
@@ -31,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
-    viewModel { MealsViewModel(get(), get()) }
+    viewModel { MealsViewModel(get(), get(), get()) }
     viewModel { MealDetailsViewModel(get(), get(), get(), get()) }
     viewModel { SavedMealsListViewModel(get()) }
 }
@@ -110,5 +111,15 @@ val databaseModule = module {
 
     single {
         provideDatabase(androidContext())
+    }
+}
+
+val dataStoreModule = module {
+    fun provideDataStore(context: Context): DataStoreRepository {
+        return DataStoreRepository.getInstance(context)
+    }
+
+    single {
+        provideDataStore(androidContext())
     }
 }

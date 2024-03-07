@@ -3,16 +3,19 @@ package com.template2024.ui.screens.meals
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.template2024.data.repositories.DataStoreRepository
 import com.template2024.domain.models.Meal
 import com.template2024.domain.usecases.GetMealsByCategoryUseCase
 import com.template2024.ui.navigation.ParameterNames
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MealsViewModel(
     private val getMealsByCategoryUseCase: GetMealsByCategoryUseCase,
+    private val dataStoreRepository: DataStoreRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val category: String = checkNotNull(savedStateHandle[ParameterNames.CATEGORY_NAME])
@@ -26,6 +29,9 @@ class MealsViewModel(
     private val _mealsListUiState =
         MutableStateFlow<MealsListUiState>(MealsListUiState.Idle(emptyList()))
     val mealsListUiState: StateFlow<MealsListUiState> = _mealsListUiState
+
+    private val _showInformationOverlay = MutableStateFlow(false)
+    val showInformationOverlay: StateFlow<Boolean> = _showInformationOverlay
 
     init {
         viewModelScope.launch {
@@ -47,8 +53,22 @@ class MealsViewModel(
 
         if (firstTenMeals?.isNotEmpty() == true) {
             _mealsListUiState.emit(MealsListUiState.Idle(firstTenMeals))
+            checkShowInformationOverlay()
         } else {
             _mealsListUiState.emit(MealsListUiState.Error("Unable to fetch meals."))
+        }
+    }
+
+    private suspend fun checkShowInformationOverlay() {
+        dataStoreRepository.showMealsInformationOverlayFlow.collectLatest { shouldShow ->
+            _showInformationOverlay.emit(shouldShow)
+        }
+    }
+
+    fun dismissMealsInformationOverlayClicked() {
+        viewModelScope.launch {
+            dataStoreRepository.setShowMealsInformationOverlayValueFalse()
+            _showInformationOverlay.emit(false)
         }
     }
 }

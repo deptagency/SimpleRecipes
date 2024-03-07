@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.template2024.R
-import com.template2024.data.sources.remote.dto.response.CategoryResponse
+import com.template2024.domain.models.Category
 import com.template2024.ui.components.TopAppBar
 import com.template2024.ui.theme.Template2024ApplicationTheme
 
@@ -164,7 +164,7 @@ fun HomeScreen(
 @Preview(apiLevel = 31, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    val category = CategoryResponse(
+    val category = Category(
         id = "0",
         name = "Beef",
         description = "Healthy Beef Recipes",

@@ -25,7 +25,7 @@ import com.template2024.ui.screens.home.HomeScreen
 import com.template2024.ui.screens.home.HomeViewModel
 import com.template2024.ui.screens.mealdetails.MealDetailsScreen
 import com.template2024.ui.screens.mealdetails.MealDetailsViewModel
-import com.template2024.ui.screens.meals.MealsListScreen
+import com.template2024.ui.screens.meals.MealsScreen
 import com.template2024.ui.screens.meals.MealsViewModel
 import com.template2024.ui.screens.savedmealslist.SavedMealsListScreen
 import com.template2024.ui.screens.savedmealslist.SavedMealsListViewModel
@@ -84,18 +84,20 @@ class MainActivity : ComponentActivity() {
 
                             val mealsViewModel = koinViewModel<MealsViewModel>()
                             val mealsListUiState by mealsViewModel.mealsListUiState.collectAsStateWithLifecycle()
+                            val showMealsInformationOverlay by mealsViewModel.showInformationOverlay.collectAsStateWithLifecycle()
 
-                            MealsListScreen(
+                            MealsScreen(
                                 appBarTitle = category,
                                 mealsListUiState = mealsListUiState,
+                                showMealsInformationOverlay = showMealsInformationOverlay,
                                 onMealClicked = { mealId ->
                                     mainNavController.navigate(
                                         MainRoute.MealDetails.name
                                             .replace("{$MEAL_ID}", mealId)
                                     )
                                 },
-                                onBackPressed = { mainNavController.popBackStack() }
-                            )
+                                onMealsInformationOverlayDismissed = { mealsViewModel.dismissMealsInformationOverlayClicked() }
+                            ) { mainNavController.popBackStack() }
                         }
                         composable(
                             route = MainRoute.MealDetails.name,

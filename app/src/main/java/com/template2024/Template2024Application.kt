@@ -2,6 +2,7 @@ package com.template2024
 
 import android.app.Application
 import com.template2024.utils.di.apiModule
+import com.template2024.utils.di.dataStoreModule
 import com.template2024.utils.di.databaseModule
 import com.template2024.utils.di.repositoryModule
 import com.template2024.utils.di.retrofitModule
@@ -20,7 +21,7 @@ class Template2024Application : Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@Template2024Application)
-            modules(listOf(viewModelModule, repositoryModule, useCaseModule, apiModule, retrofitModule, databaseModule))
+            modules(listOf(viewModelModule, repositoryModule, useCaseModule, apiModule, retrofitModule, databaseModule, dataStoreModule))
         }
     }
 }

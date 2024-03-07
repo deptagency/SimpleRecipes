@@ -1,6 +1,7 @@
 package com.template2024.data.sources.remote.dto.response
 
 import com.google.gson.annotations.SerializedName
+import com.template2024.domain.models.Category
 
 data class CategoryResponse(
     @SerializedName("idCategory")
@@ -15,3 +16,12 @@ data class CategoryResponse(
     @SerializedName("strCategoryThumb")
     val imageUrl: String
 )
+
+fun CategoryResponse.toCategory(): Category {
+    return Category(
+        id = id,
+        name = name,
+        description = description,
+        imageUrl = imageUrl
+    )
+}

@@ -4,9 +4,10 @@ import com.template2024.data.sources.local.Database
 import com.template2024.data.sources.local.model.toMealInfo
 import com.template2024.data.sources.local.model.toMealInfoEntity
 import com.template2024.data.sources.remote.api.API
-import com.template2024.data.sources.remote.dto.response.CategoryResponse
+import com.template2024.data.sources.remote.dto.response.toCategory
 import com.template2024.data.sources.remote.dto.response.toMeal
 import com.template2024.data.sources.remote.dto.response.toMealInfo
+import com.template2024.domain.models.Category
 import com.template2024.domain.models.Meal
 import com.template2024.domain.models.MealInfo
 import com.template2024.domain.repositories.RecipesRepository
@@ -17,11 +18,12 @@ class RecipesRepositoryImpl(
     private val api: API,
     private val database: Database
 ) : RecipesRepository {
-    override suspend fun getCategories(): Result<List<CategoryResponse>> {
+    override suspend fun getCategories(): Result<List<Category>> {
         return try {
-            val categoriesResponse = api.getCategories()
+            val categories = api.getCategories().categories
+                .map { it.toCategory() }
 
-            Result.success(categoriesResponse.categories)
+            Result.success(categories)
         } catch (ex: Exception) {
             Result.failure(ex)
         }
