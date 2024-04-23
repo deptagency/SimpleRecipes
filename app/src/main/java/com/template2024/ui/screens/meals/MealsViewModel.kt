@@ -68,7 +68,6 @@ class MealsViewModel(
     fun dismissMealsInformationOverlayClicked() {
         viewModelScope.launch {
             dataStoreRepository.setShowMealsInformationOverlayValueFalse()
-            _showInformationOverlay.emit(false)
         }
     }
 }

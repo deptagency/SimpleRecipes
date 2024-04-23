@@ -31,10 +31,11 @@ class DataStoreRepository private constructor(context: Context) {
     /**
      * Updated value will always be false, as user clicked 'Dismiss'
      */
-    fun setShowMealsInformationOverlayValueFalse() {
+    suspend fun setShowMealsInformationOverlayValueFalse() {
         sharedPreferences.edit {
             putBoolean(SHOW_MEALS_OVERLAY_KEY, false)
         }
+        _showMealsInformationOverlayFlow.emit(showMealsInformationOverlay)
     }
 
     companion object {
