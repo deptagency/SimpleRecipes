@@ -1,5 +1,16 @@
 # Introduction 
-Android Application 2024 Template
+Simple recipes application comprising of the following tech stack:
+
+Programming Languages: Kotlin
+Build System: Gradle
+Architecture: Model-View-ViewModel (MVVM)
+UI: Jetpack Compose
+Dependency Injection: Koin
+Networking: Retrofit
+Data Persistence: Room
+Version Control: Git
+Image Loading: Coil
+Asynchronous Programming: Kotlin Coroutines
 
 # Overview
 Application uses [clean architecture with MVVM pattern](https://developer.android.com/topic/architecture):

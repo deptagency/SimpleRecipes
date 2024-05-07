@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Template 2024</string>
+    <string name="app_name">Simple Recipes</string>
     <string name="home">Home</string>
     <string name="back">Back</string>
     <string name="recipe_image_content_description">Recipe Image</string>
