@@ -46,7 +46,7 @@ fun SavedMealsListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                appbarTitle = stringResource(id = R.string.home),
+                appbarTitle = stringResource(id = R.string.saved_recipes),
                 onBackPressed = { onBackPressed() }
             )
         },
