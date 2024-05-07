@@ -1,4 +1,6 @@
 # Simple Recipes application
+<img width="2169" alt="SimpleRecipeScreenshots" src="https://github.com/deptagency/SimpleRecipes/assets/106693516/72415185-bd39-4cc5-8235-b6f6bfa92f9f">
+
 ## Introduction 
 
 The application is a user-friendly recipe management solution.  
